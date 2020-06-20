@@ -1,8 +1,11 @@
+#!/usr/bin/python3
+
 import subprocess
 from shlex import split
 from getpass import getpass
 from shutil import which
 from sys import exit
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -38,11 +41,12 @@ while True:
     print("1) Scan for networks")
     print("2) List my devices")
     print("3) List saved networks")
-    print("4) Connect to a saved network") #known and unknown
-    print("5) Setup new network")
+    print("4) Connect to a network") #known and unknown
+    print("5) Setup a new network")
     print("6) Create a hotspot")
     print("7) Remove a saved network")
     print("8) Takedown hotspot")
+    print("q) Quit")
     print("\n")
     choice = input(": ")
     if choice == "1":
@@ -55,11 +59,11 @@ while True:
         result = subprocess.run(['nmcli', "c"], stdout=subprocess.PIPE)
         print(result.stdout.decode('utf-8'))
     elif choice == "4":
-        network = input("Network: ")
+        network = input("Network SSID: ")
         result = subprocess.run(['nmcli', "d", "wifi", "connect", network], stdout=subprocess.PIPE)
         print(result.stdout.decode('utf-8'))
     elif choice == "5":
-        network = input("Network: ")
+        network = input("Network SSID: ")
         password = getpass()
         result = subprocess.run(['nmcli', "d", "wifi", "connect", network, "password", str(password)], stdout=subprocess.PIPE)
         print(result.stdout.decode('utf-8'))
@@ -92,5 +96,7 @@ while True:
         nn = str(input("Hotspot Name: "))
         step5 = subprocess.run(["nmcli","con","down",nn], stdout=subprocess.PIPE)
         print(step5.stdout.decode('utf-8'))
+    elif choice == "q" or choice == "Q":
+        exit()
     else:
         print("Invalid choice!")
