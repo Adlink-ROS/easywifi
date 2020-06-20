@@ -34,18 +34,18 @@ def getssid(netname):
     ss=p2.communicate()[0].decode('utf-8')
     return str(ss.split()[1])
 while True:
-    print("\n")
     print("=======================================")
     print("                  MENU                 ")
     print("=======================================")
     print("1) Scan for networks")
     print("2) List my devices")
     print("3) List saved networks")
-    print("4) Connect to a network") #known and unknown
+    print("4) Connect to a saved network")
     print("5) Setup a new network")
-    print("6) Create a hotspot")
+    print("6) Show my IP address")
     print("7) Remove a saved network")
-    print("8) Takedown hotspot")
+    print("8) Create a hotspot")
+    print("9) Takedown hotspot")
     print("q) Quit")
     print("\n")
     choice = input(": ")
@@ -60,14 +60,23 @@ while True:
         print(result.stdout.decode('utf-8'))
     elif choice == "4":
         network = input("Network SSID: ")
-        result = subprocess.run(['nmcli', "d", "wifi", "connect", network], stdout=subprocess.PIPE)
+        result = subprocess.run(['sudo', 'nmcli', "d", "wifi", "connect", network], stdout=subprocess.PIPE)
         print(result.stdout.decode('utf-8'))
     elif choice == "5":
         network = input("Network SSID: ")
         password = getpass()
-        result = subprocess.run(['nmcli', "d", "wifi", "connect", network, "password", str(password)], stdout=subprocess.PIPE)
+        result = subprocess.run(['sudo', 'nmcli', "d", "wifi", "connect", network, "password", str(password)], stdout=subprocess.PIPE)
         print(result.stdout.decode('utf-8'))
     elif choice == "6":
+        result = subprocess.run(['ip', "-4", "-c", "address", "show"], stdout=subprocess.PIPE)
+        print(result.stdout.decode('utf-8'))
+    elif choice == "7":
+        result = subprocess.run(['nmcli', "c"], stdout=subprocess.PIPE)
+        print(result.stdout.decode('utf-8'))
+        contodel = str(input("Delete: "))
+        result2 = subprocess.run(["sudo", 'nmcli', "connection", "delete", contodel], stdout=subprocess.PIPE)
+        print(result2.stdout.decode('utf-8'))
+    elif choice == "8":
         if which("dnsmasq") is None:
             print(bcolors.FAIL+"creating hotspots requires dnsmasq, please install it before using this!"+bcolors.ENDC)
             continue
@@ -86,13 +95,7 @@ while True:
         print(step4.stdout.decode('utf-8'))
         step5 = subprocess.run(["nmcli","con","up","uuid",getssid(hotspotname)], stdout=subprocess.PIPE)
         print(step5.stdout.decode('utf-8'))
-    elif choice == "7":
-        result = subprocess.run(['nmcli', "c"], stdout=subprocess.PIPE)
-        print(result.stdout.decode('utf-8'))
-        contodel = str(input("Delete: "))
-        result2 = subprocess.run(['nmcli', "connection", "delete", contodel], stdout=subprocess.PIPE)
-        print(result2.stdout.decode('utf-8'))
-    elif choice == "8":
+    elif choice == "9":
         nn = str(input("Hotspot Name: "))
         step5 = subprocess.run(["nmcli","con","down",nn], stdout=subprocess.PIPE)
         print(step5.stdout.decode('utf-8'))
