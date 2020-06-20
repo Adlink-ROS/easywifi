@@ -1,6 +1,16 @@
 # easywifi
 the easiest way to add wifi networks on linux
 
+# Usage
+
+`sudo python3 easywifi.py`
+
+or
+
+`sudo ./easywifi.py`
+
+# Screenshot
+
 ![easywificover][cover]
 
 # Purpose
