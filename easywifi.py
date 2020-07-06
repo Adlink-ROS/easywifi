@@ -45,7 +45,8 @@ while True:
     print("6) Setup a new network")
     print("7) Remove a saved network")
     print("8) Create a hotspot")
-    print("9) Takedown hotspot")
+    print("9) Turn on a hotspot")
+    print("10) Turn off a hotspot")
     print("q) Quit")
     print("\n")
     choice = input(": ")
@@ -98,9 +99,17 @@ while True:
         step4 = subprocess.run(["nmcli","con","modify",str(hotspotname),"wifi-sec.psk",str(hotspotpass)], stdout=subprocess.PIPE)
         print(step4.stdout.decode('utf-8'))
 
+        print("Note: If you are configuring it through a remote session, you may be disconnected now.")
         step5 = subprocess.run(["nmcli","con","up","uuid",getssid(hotspotname)], stdout=subprocess.PIPE)
         print(step5.stdout.decode('utf-8'))
+
     elif choice == "9":
+        nn = str(input("Hotspot Name: "))
+        print("Note: If you are configuring it through a remote session, you may be disconnected now.")
+        step5 = subprocess.run(["nmcli","con","up",nn], stdout=subprocess.PIPE)
+        print(step5.stdout.decode('utf-8'))
+    
+    elif choice == "10":
         nn = str(input("Hotspot Name: "))
         step5 = subprocess.run(["nmcli","con","down",nn], stdout=subprocess.PIPE)
         print(step5.stdout.decode('utf-8'))
