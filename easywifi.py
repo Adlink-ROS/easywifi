@@ -85,14 +85,19 @@ while True:
         intf = input("Interface: ")
         hotspotname = input("Hotspot name: ")
         hotspotpass = getpass()
+        confirmpass = getpass("Confirm password: ")
+        if hotspotpass != confirmpass:
+            print("Passwords do not match!")
+            continue
         step1 = subprocess.run(["nmcli","con","add","type","wifi","ifname",str(intf), "con-name",str(hotspotname),"autoconnect", "yes", "ssid", str(hotspotname)], stdout=subprocess.PIPE)
         print(step1.stdout.decode('utf-8'))
         step2 = subprocess.run(["nmcli","con","modify",str(hotspotname),"802-11-wireless.mode","ap","802-11-wireless.band","bg","ipv4.method", "shared"], stdout=subprocess.PIPE)
         print(step2.stdout.decode('utf-8'))
         step3 = subprocess.run(["nmcli","con","modify",str(hotspotname),"wifi-sec.key-mgmt","wpa-psk"], stdout=subprocess.PIPE)
         print(step3.stdout.decode('utf-8'))
-        step4 = subprocess.run(["nmcli","con","modify",str(hotspotname),"wifi-sec.psk","'"+str(hotspotpass)+"'"], stdout=subprocess.PIPE)
+        step4 = subprocess.run(["nmcli","con","modify",str(hotspotname),"wifi-sec.psk",str(hotspotpass)], stdout=subprocess.PIPE)
         print(step4.stdout.decode('utf-8'))
+
         step5 = subprocess.run(["nmcli","con","up","uuid",getssid(hotspotname)], stdout=subprocess.PIPE)
         print(step5.stdout.decode('utf-8'))
     elif choice == "9":
