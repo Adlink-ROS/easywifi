@@ -51,6 +51,8 @@ while True:
     print("\n")
     choice = input(": ")
     if choice == "1":
+        result = subprocess.run(["sudo", 'nmcli', "d", "wifi", "rescan"], stdout=subprocess.PIPE)
+        print(result.stdout.decode('utf-8'))
         result = subprocess.run(["sudo", 'nmcli', "d", "wifi", "list"], stdout=subprocess.PIPE)
         print(result.stdout.decode('utf-8'))    
     elif choice == "2":
